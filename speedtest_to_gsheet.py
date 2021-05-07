@@ -10,8 +10,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 GSHEET_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
-# Server: Spectrum - Los Angeles, CA (id = 16974)
-SERVER_ID = "16974"
+# Server: Comcast - San Francisco, CA (id = 1783)
+# Server: Spectrum - Los Angeles, CA (id = 16974) - THIS SERVER SEEMS TO HAVE STOPPED ON 2020-12-06 @ 1630PT, switched to the above on 2020-12-31 @ 0200PT
+SERVER_ID = "1783"
 
 SPEEDTEST_CLI = f"speedtest --server-id={SERVER_ID} --format=json"
 
