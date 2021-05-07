@@ -1,8 +1,15 @@
 # `speedtest` to gSheet
 
+## Prerequisites
+
+You will need to install the `speedtest` CLI as provided by Ookla (speedtest.net).
+
+You can find [installation instructions for your platform here](https://www.speedtest.net/apps/cli).
+
 ## Setup
 
 ### Create Google Sheet
+
 1. Create a new Google Sheet to use
 1. Update `speedtest_to_gsheet.py` variable `GSHEET_DOC_KEY` with the document key for your new document.
 
