@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  speedtest_to_gsheet:
+    build: .
+    volumes:
+      - ${PWD}/config.yaml:/config.yaml:ro
+      - ${PWD}/speedtest-to-gsheet-service-account-key.json:/speedtest-to-gsheet-service-account-key.json:ro
+      - ${PWD}/ookla-speedtest-cli-eula.json:/root/.config/ookla/speedtest-cli.json:ro

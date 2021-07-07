@@ -1,0 +1,21 @@
+# (Optional) Flag to enable debug mode; prints more log output.
+DEBUG_FLAG: true
+
+# (Required) The interval to run the speedtest; in minutes
+SCHEDULE_INTERVAL: "30"
+
+# (Required) The speedtest server ID to test against.
+# Server: Comcast - San Francisco, CA (id = 1783)
+# Server: Spectrum - Los Angeles, CA (id = 16974)
+SERVER_ID: "1783"
+
+# (Required) The gSheet Document Key.
+# If your document URL is: https://docs.google.com/spreadsheets/d/1234567890abcdefghijklmnopqrstuvwxyz/edit
+# You should enter '1234567890abcdefghijklmnopqrstuvwxyz' below like the example.
+GSHEET_DOC_KEY: "1234567890abcdefghijklmnopqrstuvwxyz"
+
+# (Required) The gSheet Sheet Name (tab at the bottom).
+GSHEET_SHEET_NAME: "Speedtest [server 1783] data"
+
+# (Required) The json file with the gSheet service account key.
+GSHEETS_SERVICE_KEY_FILENAME: "speedtest-to-gsheet-service-account-key.json"

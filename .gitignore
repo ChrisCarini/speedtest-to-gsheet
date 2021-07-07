@@ -1,3 +1,4 @@
 .idea/
-env/
+venv/
 speedtest-to-gsheet-service-account-key.json
+ookla-speedtest-cli-eula.json
