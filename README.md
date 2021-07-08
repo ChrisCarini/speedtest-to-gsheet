@@ -78,7 +78,7 @@ IMAGE="chriscarini/speedtest-to-gsheet"
 # Give the image two tags; one version, and one `latest`.
 docker build -t "$IMAGE:latest" -t "$IMAGE:$VERSION" .
 
-sudo docker push "$IMAGE:latest" && docker push "$IMAGE:$VERSION"
+docker push "$IMAGE:latest" && docker push "$IMAGE:$VERSION"
 ```
 
 ## References
