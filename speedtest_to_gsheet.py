@@ -13,12 +13,11 @@ from typing import Any, Dict, Tuple, Union
 import gspread
 import yaml
 from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
 from gspread import Cell
 from oauth2client.service_account import ServiceAccountCredentials
 
-ENVIRONMENT_VARIABLES = [
-    'DEBUG',
-    'SCHEDULE_INTERVAL',
+CHECKED_ENVIRONMENT_VARIABLES = [
     'SERVER_ID',
     'GSHEET_DOC_KEY',
     'GSHEET_SHEET_NAME',
@@ -181,22 +180,23 @@ if __name__ == '__main__':
         config = yaml.load(f, Loader=yaml.SafeLoader)
 
     ##
-    # Environment Variables
+    # Validate Environment Variables
     ##
     DEBUG = get_config_value('DEBUG', 'false').lower() == 'true'
     logger.info(f'DEBUG: {DEBUG}\n')
     logger.setLevel(logging.DEBUG if DEBUG else logging.INFO)
 
-    SCHEDULE_INTERVAL = int(get_config_value('SCHEDULE_INTERVAL'))
+    SCHEDULE_INTERVAL = int(get_config_value('SCHEDULE_INTERVAL', default='0'))
+    CRON_EXPRESSION = get_config_value('CRON_EXPRESSION')
     SERVER_ID = get_config_value('SERVER_ID')
     GSHEET_DOC_KEY = get_config_value('GSHEET_DOC_KEY')
     GSHEET_SHEET_NAME = get_config_value('GSHEET_SHEET_NAME')
     GSHEETS_SERVICE_KEY_FILENAME = get_config_value('GSHEETS_SERVICE_KEY_FILENAME')
 
     # Env Var input validation (basic.)
-    for envvar_name in ENVIRONMENT_VARIABLES:
+    for envvar_name in CHECKED_ENVIRONMENT_VARIABLES:
         envvar_value = locals()[envvar_name]
-        if envvar_value == '':
+        if not envvar_value:
             logger.info('The following environment variable is not set correctly.')
             padding = " " * (32 - len(envvar_name))
             logger.info(f'    {envvar_name}:{padding}{envvar_value}')
@@ -204,11 +204,16 @@ if __name__ == '__main__':
             logger.info('Please check the environment variables and start the container again. Exiting.')
             exit(1)
 
+    # If both are set, exit; we only want one set.
+    if not SCHEDULE_INTERVAL and not CRON_EXPRESSION:
+        logger.critical('Set either `CRON_EXPRESSION` or `SCHEDULE_INTERVAL`, but not both. Exiting.')
+        exit(1)
+
     ##
-    # Variables
+    # Display Running Variables
     ##
     logger.debug('Running with the below environment variables:')
-    for envvar_name in ENVIRONMENT_VARIABLES:
+    for envvar_name in CHECKED_ENVIRONMENT_VARIABLES:
         envvar_value = locals()[envvar_name]
         padding = " " * (32 - len(envvar_name))
         logger.info(f'    {envvar_name}:{padding}{envvar_value}')
@@ -230,12 +235,23 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, gracefully_exit)
     signal.signal(signal.SIGTERM, gracefully_exit)
 
-    logger.info(f'Adding job to run every {SCHEDULE_INTERVAL} minutes...')
-    scheduler.add_job(
-        func=lambda: job(server_id=SERVER_ID),
-        trigger='interval',
-        seconds=SCHEDULE_INTERVAL * 60,
-        next_run_time=datetime.now() + timedelta(seconds=1),
-    )
+    if CRON_EXPRESSION:
+        logger.info(f'Adding job to run on the following cron schedule: {CRON_EXPRESSION}')
+        scheduler.add_job(
+            func=lambda: job(server_id=SERVER_ID),
+            trigger=CronTrigger.from_crontab(CRON_EXPRESSION),
+        )
+    elif SCHEDULE_INTERVAL:
+        logger.info(f'Adding job to run every {SCHEDULE_INTERVAL} minutes...')
+        scheduler.add_job(
+            func=lambda: job(server_id=SERVER_ID),
+            trigger='interval',
+            minutes=SCHEDULE_INTERVAL,
+            next_run_time=datetime.now() + timedelta(seconds=1),
+        )
+    else:
+        logger.critical('No schedule information set.')
+        logger.critical('Set either `CRON_EXPRESSION` or `SCHEDULE_INTERVAL` and restart the application.')
+        exit(1)
     logger.info(f'Starting job [{scheduler}] ...')
     scheduler.start()

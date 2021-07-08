@@ -1,9 +1,23 @@
 # (Optional) Flag to enable debug mode; prints more log output.
 DEBUG: false
 
-# (Required) The interval to run the speedtest; in minutes
+##
+# Schedule Information
+##
+# ** = Set either SCHEDULE_INTERVAL or CRON_EXPRESSION, but not both.
+#      Set *one*, and leave the other as an empty string ("").
+#
+# (Required**) The interval to run the speedtest; in minutes.
+# The application will run right away, and then every `SCHEDULE_INTERVAL` minutes.
 SCHEDULE_INTERVAL: "30"
 
+# (Required**) The cron expression for running.
+# The application will run as specified in the cron expression.
+#CRON_EXPRESSION: ""
+
+##
+# Other
+##
 # (Required) The speedtest server ID to test against.
 # Server: Comcast - San Francisco, CA (id = 1783)
 # Server: Spectrum - Los Angeles, CA (id = 16974)
