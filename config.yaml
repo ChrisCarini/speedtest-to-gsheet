@@ -1,5 +1,5 @@
 # (Optional) Flag to enable debug mode; prints more log output.
-DEBUG_FLAG: true
+DEBUG: false
 
 # (Required) The interval to run the speedtest; in minutes
 SCHEDULE_INTERVAL: "30"

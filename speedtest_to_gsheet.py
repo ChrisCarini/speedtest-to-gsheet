@@ -16,6 +16,15 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from gspread import Cell
 from oauth2client.service_account import ServiceAccountCredentials
 
+ENVIRONMENT_VARIABLES = [
+    'DEBUG',
+    'SCHEDULE_INTERVAL',
+    'SERVER_ID',
+    'GSHEET_DOC_KEY',
+    'GSHEET_SHEET_NAME',
+    'GSHEETS_SERVICE_KEY_FILENAME',
+]
+
 OOKLA_SPEEDTEST_CLI_EULA_FILE = '~/.config/ookla/speedtest-cli.json'
 
 CONFIG_FILE = 'config.yaml'
@@ -174,8 +183,8 @@ if __name__ == '__main__':
     ##
     # Environment Variables
     ##
-    DEBUG = get_config_value('DEBUG_FLAG', 'false').lower() == 'true'
-    logger.info(f'DEBUG_FLAG: {DEBUG}\n')
+    DEBUG = get_config_value('DEBUG', 'false').lower() == 'true'
+    logger.info(f'DEBUG: {DEBUG}\n')
     logger.setLevel(logging.DEBUG if DEBUG else logging.INFO)
 
     SCHEDULE_INTERVAL = int(get_config_value('SCHEDULE_INTERVAL'))
@@ -185,29 +194,24 @@ if __name__ == '__main__':
     GSHEETS_SERVICE_KEY_FILENAME = get_config_value('GSHEETS_SERVICE_KEY_FILENAME')
 
     # Env Var input validation (basic.)
-    if SERVER_ID == '' or GSHEET_DOC_KEY == '' or GSHEET_SHEET_NAME == '' or GSHEETS_SERVICE_KEY_FILENAME == '':
-        logger.info('One of the input environment variables is not set correctly.')
-        logger.info(f'    DEBUG_FLAG:                   {DEBUG}')
-        logger.info(f'    SCHEDULE_INTERVAL:            {SCHEDULE_INTERVAL}')
-        logger.info(f'    SERVER_ID:                    {SERVER_ID}')
-        logger.info(f'    GSHEET_DOC_KEY:               {GSHEET_DOC_KEY}')
-        logger.info(f'    GSHEET_SHEET_NAME:            {GSHEET_SHEET_NAME}')
-        logger.info(f'    GSHEETS_SERVICE_KEY_FILENAME: {GSHEETS_SERVICE_KEY_FILENAME}')
-        logger.info('')
-        logger.info('Please check the environment variables and start the container again. Exiting.')
-        exit(1)
+    for envvar_name in ENVIRONMENT_VARIABLES:
+        envvar_value = locals()[envvar_name]
+        if envvar_value == '':
+            logger.info('The following environment variable is not set correctly.')
+            padding = " " * (32 - len(envvar_name))
+            logger.info(f'    {envvar_name}:{padding}{envvar_value}')
+            logger.info('')
+            logger.info('Please check the environment variables and start the container again. Exiting.')
+            exit(1)
 
     ##
-    # Variables / Constants
+    # Variables
     ##
-    logger.debug('Running with the below variables:')
-    logger.debug('  Environment Variables')
-    logger.debug(f'    DEBUG_FLAG:                    {DEBUG}')
-    logger.debug(f'    SCHEDULE_INTERVAL:             {SCHEDULE_INTERVAL}')
-    logger.debug(f'    SERVER_ID:                     {SERVER_ID}')
-    logger.debug(f'    GSHEET_DOC_KEY:                {GSHEET_DOC_KEY}')
-    logger.debug(f'    GSHEET_SHEET_NAME:             {GSHEET_SHEET_NAME}')
-    logger.debug(f'    GSHEETS_SERVICE_KEY_FILENAME:  {GSHEETS_SERVICE_KEY_FILENAME}')
+    logger.debug('Running with the below environment variables:')
+    for envvar_name in ENVIRONMENT_VARIABLES:
+        envvar_value = locals()[envvar_name]
+        padding = " " * (32 - len(envvar_name))
+        logger.info(f'    {envvar_name}:{padding}{envvar_value}')
 
     ##
     # Clients
