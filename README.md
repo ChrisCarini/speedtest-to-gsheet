@@ -72,7 +72,7 @@ docker-compose -f docker-compose.yml up -d
 ```shell
 docker login --username chriscarini
 
-VERSION=0.0.2
+VERSION=0.0.3
 IMAGE="chriscarini/speedtest-to-gsheet"
 
 # Give the image two tags; one version, and one `latest`.

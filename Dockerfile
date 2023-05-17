@@ -1,7 +1,7 @@
-FROM python:3.7-buster
+FROM python:3.9-buster
 
 # RUN command #1 to get the CLI
-RUN curl -s https://install.speedtest.net/app/cli/install.deb.sh | bash && \
+RUN curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | bash && \
     apt-get install speedtest
 
 ADD requirements.txt /
