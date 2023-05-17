@@ -5,6 +5,7 @@ import pprint
 import signal
 import subprocess
 import sys
+
 from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -12,6 +13,7 @@ from typing import Any, Dict, Tuple, Union
 
 import gspread
 import yaml
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from gspread import Cell
@@ -198,7 +200,7 @@ if __name__ == '__main__':
         envvar_value = locals()[envvar_name]
         if not envvar_value:
             logger.info('The following environment variable is not set correctly.')
-            padding = " " * (32 - len(envvar_name))
+            padding = ' ' * (32 - len(envvar_name))
             logger.info(f'    {envvar_name}:{padding}{envvar_value}')
             logger.info('')
             logger.info('Please check the environment variables and start the container again. Exiting.')
@@ -215,7 +217,7 @@ if __name__ == '__main__':
     logger.debug('Running with the below environment variables:')
     for envvar_name in CHECKED_ENVIRONMENT_VARIABLES:
         envvar_value = locals()[envvar_name]
-        padding = " " * (32 - len(envvar_name))
+        padding = ' ' * (32 - len(envvar_name))
         logger.info(f'    {envvar_name}:{padding}{envvar_value}')
 
     ##
@@ -224,12 +226,10 @@ if __name__ == '__main__':
     logger.info('Creating scheduler...')
     scheduler = BlockingScheduler()
 
-
     def gracefully_exit(signum, frame):
         logger.info('Stopping scheduler...')
         scheduler.shutdown()
         logger.info('Scheduler shutdown.')
-
 
     logger.info('Adding shutdown signal handlers...')
     signal.signal(signal.SIGINT, gracefully_exit)
