@@ -4,7 +4,7 @@ cachetools==4.1.0
 certifi==2024.7.4
 chardet==3.0.4
 google-auth==2.31.0
-google-auth-oauthlib==0.4.1
+google-auth-oauthlib==1.2.0
 gspread==3.6.0
 httplib2==0.22.0
 idna==3.7
