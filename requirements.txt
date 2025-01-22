@@ -1,6 +1,6 @@
 APScheduler==3.11.0
 blue==0.9.1
-cachetools==5.5.0
+cachetools==5.5.1
 certifi==2024.12.14
 chardet==5.2.0
 google-auth==2.37.0
