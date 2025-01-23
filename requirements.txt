@@ -3,7 +3,7 @@ blue==0.9.1
 cachetools==5.5.1
 certifi==2024.12.14
 chardet==5.2.0
-google-auth==2.37.0
+google-auth==2.38.0
 google-auth-oauthlib==1.2.1
 gspread==6.1.4
 httplib2==0.22.0
